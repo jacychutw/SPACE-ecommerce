@@ -41,29 +41,27 @@
       您的購物車是空的，去逛逛吧！
     </div>
 
-    <div class="mt-8 mb-8 mr-16" style="display: flex; justify-content: flex-end;">
+    <div class="float-right mt-8 mb-16 mr-16">
       <div>結帳金額：NT$ {{ sumnumber }}</div>
 
-      <!-- <div class="float-right mt-8">
+      <div class="float-right mt-8">
         <span class="checkcart-button">下一步</span>
-      </div> -->
+      </div>
     </div>
 
-    <!-- <form action="https://ccore.newebpay.com/MPG/mpg_gateway" method="post"> -->
-    <form @submit.prevent="submitForm">
-    <!-- <form action="{{ tradeWithPage.PayGateWay }}" method="post"> -->
-      <input type="hidden" name="MerchantID" value="MS125084583">
-      <input type="hidden" name="RespondType" value="JSON">
-      <input type="hidden" name="TradeInfo" value="#{tradeinfo}">
-      <input type="hidden" name="TradeSha" value="#{sha}">
-      <input type="hidden" name="TimeStamp" :value="timestamp">
-      <input type="hidden" name="Version" value="1.5">
-      <input type="hidden" name="MerchantOrderNo" :value="timestamp">
-      <input type="hidden" name="Amt" :value="sumnumber">
-      <input type="hidden" name="ItemDesc" value="SPACE-shopping">
-      <input type="hidden" name="Email" :value="useremail">
-      <div @click="submitForm" style="display: flex; justify-content: flex-end;"><button class="checkcart-button">下一步</button></div>
-    </form>
+    <!-- <form action="https://ccore.newebpay.com/MPG/mpg_gateway" method="post">
+      <input type="text" name="MerchantID" value="MS125084583">
+      <input type="text" name="RespondType" value="JSON">
+      <input type="text" name="TradeInfo" value="eced1059f89ebd28a158f85f1ccedebac50df1239bb0f49ade0e3e5dec94a85bf986226fbf0733afb1dc6dfc5be67d23c15bd7b78f3280ea72e525f43cbe17dd3938c73a8abfddb898ae4b7c3dba18043396658a7a27208b1e29043bbe3aa46888bc16068080aa270db3a3d6911de498e585ad437710b9fcf5c00f3a9083b11e9b780a85d2d736c60b0ca3f332ca6e19828c480b5733c85a5a1056ec0884a7ce">
+      <input type="text" name="TradeSha" value="3F868340EEEF5BEF92EDAAD7E3E840995C90A145E55F799AD9F11737F72BB467">
+      <input type="text" name="TimeStamp" value="1635735933">
+      <input type="text" name="Version" value="1.5">
+      <input type="text" name="MerchantOrderNo" value="1635735933">
+      <input type="text" name="Amt" value="1000">
+      <input type="text" name="Email" value="jacy0303@gmail.com">
+      <input type="text" name="ItemDesc" value="TEST">
+      <button>SEND</button>
+    </form> -->
 
     <!-- ====== delete-dialog ====== -->
     <check-dialog :openDialog="openCheckDialog">
@@ -104,29 +102,13 @@
 import CheckDialog from "../components/CheckDialog";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-//import { Endcrypt } from "endcrypt";
-import AES from '@/utils/aes.js';
-import axios from 'axios';
 
 export default {
   data() {
     return {
-      PayGateWay: {},
-      trade: {},
-      tradeWithPage: {},
-      spgateway: {
-        // HashKey: process.env.HASHKEY,//'MS125084583',
-        // HashIV: process.env.HASHIV,//'2RLIPflUtc5Doo0Km18CgGveoqhLSL4K',
-        // MerchantID: process.env.MERCHANTID,//'CXlO34ad4svifoQP',
-        HashIV: 'CXlO34ad4svifoQP',
-        HashKey: '2RLIPflUtc5Doo0Km18CgGveoqhLSL4K',
-        MerchantID: 'MS125084583',
-      },
       publicPath: process.env.BASE_URL,
       products: [],
       sumnumber: 0,
-      useremail: "",
-      timestamp: "",
       isDataLoaded: false,
       deleteId: null,
       deleteTitle: null,
@@ -185,11 +167,11 @@ export default {
     async readData() {
       let user = firebase.auth().currentUser;
       //let username = user.displayName;
-      this.useremail = user.email;
+      let useremail = user.email;
       const dbGetUser = firebase
         .firestore()
         .collection("userdata")
-        .where("email", "==", this.useremail);
+        .where("email", "==", useremail);
       await dbGetUser.get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           let num = doc.data().price.replace(/^.*?(\d+).*/, "$1");
@@ -231,77 +213,9 @@ export default {
         this.$router.go();
       }, 300);
     },
-    submitForm() {
-
-      let key = '2RLIPflUtc5Doo0Km18CgGveoqhLSL4K';
-      let iv = 'CXlO34ad4svifoQP';
-
-      this.trade = {
-        MerchantID: this.spgateway.MerchantID,
-        RespondType: 'JSON',
-        TimeStamp: this.timestamp,
-        Version: 1.5,
-        MerchantOrderNo: this.timestamp,
-        Amt: this.sumnumber,
-        ItemDesc: 'SPACE-shopping',
-        Email: this.useremail,
-      }
-
-      this.tradeWithPage = {
-        MerchantID: this.spgateway.MerchantID,
-        RespondType: 'JSON',
-        TimeStamp: this.timestamp,
-        Version: 1.5,
-        MerchantOrderNo: this.timestamp,
-        Amt: this.sumnumber,
-        ItemDesc: 'SPACE-shopping',
-        Email: this.useremail,
-        PayGateWay: 'https://ccore.newebpay.com/MPG/mpg_gateway',
-      }
-
-      console.log(this.trade);
-      let aesMStr = AES.encryptTradeInfo(key, iv, this.trade);
-      let parameter = `HashKey=${this.spgateway.HashKey}&${aesMStr}&HashIV=${this.spgateway.HashIV}`;
-      let shaOri = AES.encryptSha(parameter);
-      let sha = shaOri.toUpperCase();
-
-      console.log(aesMStr);
-      console.log(sha);
-
-      // const headers = {
-      //   'Content-Type': 'XMLHttpRequest',
-      //   'Access-Control-Allow-Origin': '*'
-      // }
-      // axios.defaults.withCredentials = true;
-      // axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-      // axios.defaults.headers.post['Access-Control-Allow-Methods'] ='GET,POST,OPTIONS,DELETE,PUT'
-      //axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-      axios.post('https://secret-ocean-49799.herokuapp.com/https://ccore.newebpay.com/MPG/mpg_gateway', {
-        tradeinfo: aesMStr,
-        sha: sha,
-      },
-      //{headers: headers}
-        ).then(response => {
-        console.log('Data saved successfully');
-        console.log(response);
-        // this.response = response.data
-
-        // this.success = 'Data saved successfully';
-        // this.response = JSON.stringify(response, null, 2)
-      }).catch(error => {
-        console.log(error);
-
-        // this.response = 'Error: ' + error.response.status
-      })
-      // this.name = '';
-      // this.email = '';
-      // this.firstSon = '';
-    },
   },
   created() {
     this.readData();
-    this.timestamp = Math.floor(Date.now()/ 1000);
-    console.log("timestamp",this.timestamp)
   },
 };
 </script>
@@ -329,6 +243,5 @@ export default {
   color: white;
   padding: 10px;
   cursor: pointer;
-  margin:0 60px 80px 0;
 }
 </style>

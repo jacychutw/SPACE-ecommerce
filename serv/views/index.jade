@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  form(action="/order_create" method="POST")
+    .form-group
+      label(for="Email") Email
+      input.form-control(type="email" id="Email" name="Email")
+      label(for="ItemDesc") ItemDesc
+      input.form-control(type="text" id="ItemDesc" name="ItemDesc")
+      label(for="Amt") Price
+      input.form-control(type="text" id="Amt" name="Amt")
+    .text-right
+      button.btn Send
