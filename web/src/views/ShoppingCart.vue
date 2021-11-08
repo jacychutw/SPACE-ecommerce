@@ -1,308 +1,99 @@
 <template>
-  <div class="all-products">
+  <div class="stepper">
     <v-divider></v-divider>
-    <div class="page-title mt-8 mb-8">
-      <h2>購物車</h2>
-    </div>
-    <v-data-table
-      v-if="isDataLoaded"
-      class="mr-12 ml-12"
-      :headers="shoppingHeaders"
-      :items="products"
-      hide-default-footer
-      disable-pagination
-      @input="(event) => inputAnnotation(event, props.item.img)"
-    >
-      <template v-slot:item.img="{ item }">
-        <img
-          class="pt-1"
-          width="45"
-          :src="`${publicPath}elements/${item.img}.jpg`"
-        />
-      </template>
-      <template v-slot:item.eachsum="{ item }">
-        {{ item.eachsum }}
-      </template>
-      <template v-slot:item.delete="{ item }">
-        <v-icon
-          color="#8DA69D"
-          @click="
-            deleteId = item.img;
-            deleteTitle = item.title;
-            openCheckDialog = true;
-          "
-        >
-          mdi-delete
-        </v-icon>
-      </template>
-    </v-data-table>
 
-    <div v-if="checkEmptyCart()" class="ml-16" style="color: #526161">
-      您的購物車是空的，去逛逛吧！
-    </div>
+  <div class="mr-16 ml-16 mt-4">
+  <v-stepper alt-labels v-model="e1" flat>
+    <v-stepper-header>
+      <v-stepper-step
+        :complete="e1 > 1"
+        step="1"
+      >
+        <span style="color: #8a8e8f">購物車</span>
+      </v-stepper-step>
 
-    <div class="mt-8 mb-8 mr-16" style="display: flex; justify-content: flex-end;">
-      <div>結帳金額：NT$ {{ sumnumber }}</div>
+      <v-divider></v-divider>
 
-      <!-- <div class="float-right mt-8">
-        <span class="checkcart-button">下一步</span>
-      </div> -->
-    </div>
+      <v-stepper-step
+        :complete="e1 > 2"
+        step="2"
+      >
+        <span style="color: #8a8e8f">填寫資料</span>
+      </v-stepper-step>
 
-    <!-- <form action="https://ccore.newebpay.com/MPG/mpg_gateway" method="post"> -->
-    <form @submit.prevent="submitForm">
-    <!-- <form action="{{ tradeWithPage.PayGateWay }}" method="post"> -->
-      <input type="hidden" name="MerchantID" value="MS125084583">
-      <input type="hidden" name="RespondType" value="JSON">
-      <input type="hidden" name="TradeInfo" value="#{tradeinfo}">
-      <input type="hidden" name="TradeSha" value="#{sha}">
-      <input type="hidden" name="TimeStamp" :value="timestamp">
-      <input type="hidden" name="Version" value="1.5">
-      <input type="hidden" name="MerchantOrderNo" :value="timestamp">
-      <input type="hidden" name="Amt" :value="sumnumber">
-      <input type="hidden" name="ItemDesc" value="SPACE-shopping">
-      <input type="hidden" name="Email" :value="useremail">
-      <div @click="submitForm" style="display: flex; justify-content: flex-end;"><button class="checkcart-button">下一步</button></div>
-    </form>
+      <v-divider></v-divider>
 
-    <!-- ====== delete-dialog ====== -->
-    <check-dialog :openDialog="openCheckDialog">
-      <template slot="content">
-        <span style="text-align: center"
-          >確定移除商品: {{ deleteTitle }}？</span
-        >
-      </template>
-      <template slot="action">
-        <v-btn
-          depressed
-          style="
-            padding: 24px 20px 20px 20px;
-            background-color: rgb(227, 230, 230);
-          "
-          @click="openCheckDialog = false"
-        >
-          取消
-        </v-btn>
-        <v-btn
-          depressed
-          style="
-            padding: 24px 20px 20px 20px;
-            background-color: rgb(227, 230, 230);
-          "
-          @click="deleteFromCart"
-        >
-          確定
-        </v-btn>
-      </template>
-    </check-dialog>
-    <!-- ====== end of delete-dialog ====== -->
+      <v-stepper-step step="3">
+        <span style="color: #8a8e8f">訂單確認</span>
+      </v-stepper-step>
+    </v-stepper-header>
+
+    <v-stepper-items>
+      <v-stepper-content step="1">
+        <Cart @toStepTwo="whetherToStepTwo(arguments)"></Cart>
+        <div class="next-step">
+          <button id="first" @click="e1 = 2" class="checkcart-button mt-8 mb-8" :style="{ 'background-color': changeActiveColor }">下一步</button>
+        </div>
+
+      </v-stepper-content>
+
+      <v-stepper-content step="2">
+        <UserInfo :sumnumber="sumnumber" :username="username" :useremail="useremail" />
+
+        <div class="next-step">
+          <button @click="e1 = 1" class="uncheckcart-button mb-8 mr-1">上一步</button>
+          <button @click="e1 = 3" class="checkcart-button mb-8 ml-1">下一步</button>
+        </div>
+
+      </v-stepper-content>
+
+      <v-stepper-content step="3">
+        <Received />
+
+      </v-stepper-content>
+    </v-stepper-items>
+  </v-stepper>
+  </div>
+
   </div>
 </template>
 
 <script>
-//import { mapGetters } from "vuex";
-import CheckDialog from "../components/CheckDialog";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-//import { Endcrypt } from "endcrypt";
-import AES from '@/utils/aes.js';
-import axios from 'axios';
+import Cart from "../components/Cart.vue";
+import UserInfo from "../components/UserInfo.vue";
+import Received from "../components/Received.vue";
 
 export default {
-  data() {
+  components: { Cart, UserInfo, Received },
+  data () {
     return {
-      PayGateWay: {},
-      trade: {},
-      tradeWithPage: {},
-      spgateway: {
-        // HashKey: process.env.HASHKEY,//'MS125084583',
-        // HashIV: process.env.HASHIV,//'2RLIPflUtc5Doo0Km18CgGveoqhLSL4K',
-        // MerchantID: process.env.MERCHANTID,//'CXlO34ad4svifoQP',
-        HashIV: 'CXlO34ad4svifoQP',
-        HashKey: '2RLIPflUtc5Doo0Km18CgGveoqhLSL4K',
-        MerchantID: 'MS125084583',
-      },
-      publicPath: process.env.BASE_URL,
-      products: [],
-      sumnumber: 0,
+      e1: 1,
+      changeActiveColor: "lightgray",
+      username: "",
       useremail: "",
-      timestamp: "",
-      isDataLoaded: false,
-      deleteId: null,
-      deleteTitle: null,
-      openCheckDialog: false,
-      shoppingHeaders: [
-        {
-          text: "圖示",
-          align: "center",
-          sortable: false,
-          value: "img",
-        },
-        {
-          text: "商品名稱",
-          align: "center",
-          sortable: false,
-          value: "title",
-        },
-        {
-          text: "單價",
-          align: "center",
-          sortable: false,
-          value: "price",
-        },
-        {
-          text: "數量",
-          align: "center",
-          sortable: false,
-          value: "count",
-        },
-        {
-          text: "價格",
-          align: "center",
-          sortable: false,
-          value: "eachsum",
-        },
-        {
-          text: "刪除",
-          align: "center",
-          sortable: false,
-          value: "delete",
-        },
-      ],
-    };
-  },
-  components: {
-    "check-dialog": CheckDialog,
+      sumnumber: 0,
+    }
   },
   methods: {
-    checkEmptyCart() {
-      if (this.products.length == 0) {
-        return true;
+    whetherToStepTwo(val) {
+       var toNext = document.querySelector("#first");
+      if(val[0]) {
+        // val true 的話 代表可以進到下一步
+        console.log("val",val)
+        this.changeActiveColor = "#516161";
+        toNext.removeAttribute("disabled", "");
+        toNext.setAttribute("enabled", "");
+        this.sumnumber = val[1];
+        this.username = val[2];
+        this.useremail = val[3];
       } else {
-        return false;
+        console.log("val",val)
+        this.changeActiveColor = "lightgray";
+        toNext.removeAttribute("enabled", "");
+        toNext.setAttribute("disabled", "");
       }
-    },
-    async readData() {
-      let user = firebase.auth().currentUser;
-      //let username = user.displayName;
-      this.useremail = user.email;
-      const dbGetUser = firebase
-        .firestore()
-        .collection("userdata")
-        .where("email", "==", this.useremail);
-      await dbGetUser.get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          let num = doc.data().price.replace(/^.*?(\d+).*/, "$1");
-          //console.log(num);
-          let eachsum = num * doc.data().count;
-          this.sumnumber += parseInt(eachsum);
-          //console.log(eachsum);
-          const newData = { ...doc.data(), eachsum: "NT$ " + eachsum };
-          this.products.push(newData);
-        });
-      });
-      this.isDataLoaded = true;
-    },
-    async deleteFromCart() {
-      this.isDataLoaded = false;
-      let user = firebase.auth().currentUser;
-      let username = user.displayName;
-      let deleteId = this.deleteId;
-      const dbGetUser = firebase
-        .firestore()
-        .collection("userdata")
-        .where("user", "==", username)
-        .where("img", "==", deleteId)
-        .get();
-      await dbGetUser.then((doc) => {
-        doc.forEach((element) => {
-          element.ref.delete();
-          console.log("deleted");
-        });
-        return (this.isDataLoaded = true);
-      });
-      if (this.isDataLoaded) {
-        this.reRender();
-        this.openCheckDialog = false;
-      }
-    },
-    reRender() {
-      setTimeout(() => {
-        this.$router.go();
-      }, 300);
-    },
-    submitForm() {
-
-      let key = '2RLIPflUtc5Doo0Km18CgGveoqhLSL4K';
-      let iv = 'CXlO34ad4svifoQP';
-
-      this.trade = {
-        MerchantID: this.spgateway.MerchantID,
-        RespondType: 'JSON',
-        TimeStamp: this.timestamp,
-        Version: 1.5,
-        MerchantOrderNo: this.timestamp,
-        Amt: this.sumnumber,
-        ItemDesc: 'SPACE-shopping',
-        Email: this.useremail,
-      }
-
-      this.tradeWithPage = {
-        MerchantID: this.spgateway.MerchantID,
-        RespondType: 'JSON',
-        TimeStamp: this.timestamp,
-        Version: 1.5,
-        MerchantOrderNo: this.timestamp,
-        Amt: this.sumnumber,
-        ItemDesc: 'SPACE-shopping',
-        Email: this.useremail,
-        PayGateWay: 'https://ccore.newebpay.com/MPG/mpg_gateway',
-      }
-
-      console.log(this.trade);
-      let aesMStr = AES.encryptTradeInfo(key, iv, this.trade);
-      let parameter = `HashKey=${this.spgateway.HashKey}&${aesMStr}&HashIV=${this.spgateway.HashIV}`;
-      let shaOri = AES.encryptSha(parameter);
-      let sha = shaOri.toUpperCase();
-
-      console.log(aesMStr);
-      console.log(sha);
-
-      // const headers = {
-      //   'Content-Type': 'XMLHttpRequest',
-      //   'Access-Control-Allow-Origin': '*'
-      // }
-      // axios.defaults.withCredentials = true;
-      // axios.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-      // axios.defaults.headers.post['Access-Control-Allow-Methods'] ='GET,POST,OPTIONS,DELETE,PUT'
-      //axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-      axios.post('https://secret-ocean-49799.herokuapp.com/https://ccore.newebpay.com/MPG/mpg_gateway', {
-        tradeinfo: aesMStr,
-        sha: sha,
-      },
-      //{headers: headers}
-        ).then(response => {
-        console.log('Data saved successfully');
-        console.log(response);
-        // this.response = response.data
-
-        // this.success = 'Data saved successfully';
-        // this.response = JSON.stringify(response, null, 2)
-      }).catch(error => {
-        console.log(error);
-
-        // this.response = 'Error: ' + error.response.status
-      })
-      // this.name = '';
-      // this.email = '';
-      // this.firstSon = '';
-    },
-  },
-  created() {
-    this.readData();
-    this.timestamp = Math.floor(Date.now()/ 1000);
-    console.log("timestamp",this.timestamp)
-  },
+    }
+  }
 };
 </script>
 
@@ -324,11 +115,27 @@ export default {
   margin: auto;
 }
 
+.v-stepper__header {
+  box-shadow: none;
+}
+
+.next-step {
+  display: flex;
+  justify-content: center;
+}
+
 .checkcart-button {
   background-color: #526161;
   color: white;
-  padding: 10px;
+  padding: 6px 20px;
   cursor: pointer;
-  margin:0 60px 80px 0;
 }
+
+.uncheckcart-button {
+  background-color: gray;
+  color: white;
+  padding: 6px 20px;
+  cursor: pointer;
+}
+
 </style>

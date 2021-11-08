@@ -18,7 +18,7 @@
       <img class="logistics-img" src="../assets/logistics.png" alt="" />
     </div>
     <div class="mt-8 mb-8">
-      <img class="threedots-center" src="../assets/threedots.png" alt="" />
+      <img class="threedots-center" src="../assets/threedots.png" alt="threedots" />
     </div>
   </div>
 </template>

@@ -5,7 +5,6 @@
       <div class="page-title mt-8 mb-8">
         <h2>會員註冊</h2>
       </div>
-      <div v-if="error" class="error">{{ error.message }}</div>
       <div class="form-width">
         <form @submit.prevent="pressed">
           <v-text-field
@@ -33,10 +32,10 @@
           ></v-text-field>
           <button class="register-btn" type="submit">Register</button>
         </form>
+          <div v-if="error" class="inform-error mb-6">{{ error }}</div>
       </div>
-
       <!-- <div class="mt-8 mb-8">
-        <img class="threedots-center" src="../assets/threedots.png" alt="" />
+        <img class="threedots-center" src="../assets/threedots.png" alt="threedots" />
       </div> -->
     </div>
   </div>
@@ -64,11 +63,15 @@ export default {
               displayName: document.getElementById("name").value,
             });
           });
+        this.error = null;
         this.$router.replace({ name: "ShoppingCart" });
         console.log(res);
         this.$router.go();
       } catch (err) {
         console.log(err);
+        const errArr = err.message.split(' ');
+        const cut = errArr.slice(1);
+        this.error = cut.join(' ');
       }
     },
   },
@@ -98,5 +101,12 @@ export default {
   width: 300px;
   padding: 10px;
   color: white;
+}
+
+.inform-error {
+  color: rgb(177, 81, 81);
+  background-color: white;
+  text-align: left;
+  font-size: 12px;
 }
 </style>

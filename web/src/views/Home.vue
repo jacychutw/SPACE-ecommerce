@@ -60,11 +60,11 @@
     </v-container>
 
     <div class="quote">
-      <img class="dots-img" src="../assets/threedots.png" alt="" />
+      <img class="dots-img" src="../assets/threedots.png" alt="threedots" />
       <p>
         一個空間，因著人們在其中來回走動、駐足停留，賦予其無限可能性。好的傢俱與擺飾給予空間不同的生命力，無論是時尚風格、鄉村恬靜、北歐高雅等各類型，精巧妙地搭配，都可以無違和感地融入。
       </p>
-      <img class="dots-img" src="../assets/threedots.png" alt="" />
+      <img class="dots-img" src="../assets/threedots.png" alt="threedots" />
     </div>
 
     <div class="mt-8 mb-8">

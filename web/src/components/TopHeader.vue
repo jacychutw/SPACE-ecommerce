@@ -3,7 +3,10 @@
     <div class="login-cart mt-3">
       <span v-if="loggedIn" class="mr-3"
         >Hi! {{ username }}
-        <v-icon @click="toShoppingCart" left style="color: #526161">
+        <v-icon v-if="checkEmpty()" @click="toShoppingCart" left style="color: #526161">
+          mdi-cart-outline
+        </v-icon>
+        <v-icon v-else @click="toShoppingCart" left style="color: #526161">
           mdi-cart
         </v-icon>
         <v-icon @click="signOut" left style="color: #526161">
@@ -21,11 +24,13 @@
 <script>
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+
 export default {
   data() {
     return {
       username: "",
       loggedIn: false,
+      products: [],
     };
   },
   created() {
@@ -37,6 +42,7 @@ export default {
         this.loggedIn = false;
       }
     });
+    this.readData();
   },
   mounted() {
     firebase.auth().onAuthStateChanged((user) => {
@@ -60,6 +66,32 @@ export default {
     },
     toShoppingCart() {
       this.$router.push({ name: "ShoppingCart" });
+    },
+    async readData() {
+      let user = firebase.auth().currentUser;
+      //let username = user.displayName;
+      this.useremail = user.email;
+      const dbGetUser = firebase
+        .firestore()
+        .collection("userdata")
+        .where("email", "==", this.useremail);
+      await dbGetUser.get().then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          let num = doc.data().price.replace(/^.*?(\d+).*/, "$1");
+          let eachsum = num * doc.data().count;
+          this.sumnumber += parseInt(eachsum);
+          const newData = { ...doc.data(), eachsum: "NT$ " + eachsum };
+          this.products.push(newData);
+        });
+      });
+      this.checkEmpty();
+    },
+    checkEmpty() {
+      if (this.products.length == 0) {
+        return true;
+      } else {
+        return false;
+      }
     },
   },
 };

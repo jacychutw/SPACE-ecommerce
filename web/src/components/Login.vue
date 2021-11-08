@@ -5,7 +5,6 @@
       <div class="page-title mt-8 mb-8">
         <h2>會員登入</h2>
       </div>
-      <div v-if="error" class="error">{{ error.message }}</div>
       <div class="form-width">
         <form @submit.prevent="handleSubmit">
           <v-text-field
@@ -26,11 +25,8 @@
           ></v-text-field>
           <button class="login-btn" type="submit">Login</button>
         </form>
+          <div v-if="error" class="inform-error mb-6">{{ error }}</div>
       </div>
-
-      <!-- <div class="mt-8 mb-8">
-        <img class="threedots-center" src="../assets/threedots.png" alt="" />
-      </div> -->
     </div>
   </div>
 </template>
@@ -53,12 +49,13 @@ export default {
         const val = await firebase
           .auth()
           .signInWithEmailAndPassword(this.email, this.password);
-        //error.value = null
+        this.error = null;
         console.log(val);
         this.$router.replace({ name: "ShoppingCart" });
       } catch (err) {
-        console.log(err);
-        //error.value = 'Incorrect login credentials'
+        const errArr = err.message.split(' ');
+        const cut = errArr.slice(1);
+        this.error = cut.join(' ');
       }
     }
   }
@@ -88,5 +85,12 @@ export default {
   width: 300px;
   padding: 10px;
   color: white;
+}
+
+.inform-error {
+  color: rgb(177, 81, 81);
+  background-color: white;
+  text-align: left;
+  font-size: 12px;
 }
 </style>
