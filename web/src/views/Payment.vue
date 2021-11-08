@@ -7,7 +7,7 @@
     <div class="payment-quote mt-4 mb-4">
       <p>
         SPACE 與綠界金流合作，有提供信用卡、金融卡等管道給您繳費。<br /><br />
-        若您的訂購金額超過新台幣三萬元，單筆消費金額較高，我們將提供專屬折扣給您。<br />
+        若您的訂購金額超過新台幣五萬元，單筆消費金額較高，我們將提供專屬折扣給您。<br />
         另外，由於件數較多，運送方式與平台設定的略有不同，固不適用平台繳費方式。<br />
         請您親自致電給我們，會有專人為您服務。<br />
       </p>
@@ -16,7 +16,7 @@
       <img class="payment-img" src="../assets/payment.png" alt="" />
     </div>
     <div class="mt-8 mb-8">
-      <img class="threedots-center" src="../assets/threedots.png" alt="" />
+      <img class="threedots-center" src="../assets/threedots.png" alt="threedots" />
     </div>
   </div>
 </template>

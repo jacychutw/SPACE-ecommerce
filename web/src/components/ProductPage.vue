@@ -13,7 +13,7 @@
       <v-row>
         <v-col cols="12" sm="6">
           <v-card class="pa-2" outlined tile>
-            <img class="card-img" :src="productimg" alt="" />
+            <img class="card-img" :src="productimg" :alt="productimg" />
           </v-card>
         </v-col>
         <v-col cols="12" sm="6">
@@ -65,7 +65,7 @@
     </v-container>
 
     <div class="mt-8 mb-8">
-      <img class="threedots-center" src="../assets/threedots.png" alt="" />
+      <img class="threedots-center" src="../assets/threedots.png" alt="threedots" />
     </div>
 
     <!-- ====== check-dialog ====== -->
@@ -83,7 +83,7 @@
             padding: 24px 20px 20px 20px;
             background-color: rgb(227, 230, 230);
           "
-          @click="openCheckDialog = false"
+          @click="openCheckDialog = false; reRenderCheckCart()"
         >
           確定
         </v-btn>
@@ -276,6 +276,11 @@ export default {
     reRender() {
       setTimeout(() => {
         this.$router.push({ name: "ShoppingCart" });
+      }, 300);
+    },
+    reRenderCheckCart() {
+      setTimeout(() => {
+        this.$router.go();
       }, 300);
     },
     numberMoreThanNine() {
