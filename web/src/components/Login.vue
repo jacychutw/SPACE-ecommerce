@@ -16,7 +16,9 @@
           >
           </v-text-field>
           <v-text-field
-            type="password"
+            :append-icon="value1 ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+            @click:append="() => (value1 = !value1)"
+            :type="value1 ? 'password' : 'text'"
             required
             placeholder="password"
             v-model="password"
@@ -41,6 +43,7 @@ export default {
       email: "",
       password: "",
       error: "",
+      value1: String,
     };
   },
   methods: {
@@ -58,7 +61,7 @@ export default {
         this.error = cut.join(' ');
       }
     }
-  }
+  },
 }
 </script>
 

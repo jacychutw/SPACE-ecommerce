@@ -79,10 +79,9 @@
           @input="$v.shippingAddress.$touch()"
           @blur="$v.shippingAddress.$touch()"
         ></v-text-field>
-
-        <v-btn @click="checkError">檢查</v-btn>
+        <!-- <v-btn @click="checkError">檢查</v-btn> -->
       </div>
-      <div class="moneyTotal mb-8" style="text-decoration-line: none; background-color: #fff6e8; color: brown ">進到下一步前，請檢查上方表格資訊是否正確！</div>
+      <div class="moneyTotal mb-8" style="text-decoration-line: none; background-color: #f5efe1; color: #915233 ">進到下一步前，請檢查上方表格資訊是否正確！</div>
       </div>
     </div>
 
@@ -106,6 +105,7 @@ export default {
       recipient: "",
       recipientNum: "",
       shippingAddress: "",
+      somethingError: true,
     };
   },
   props:["sumnumber", "username" , "useremail"],
@@ -119,21 +119,12 @@ export default {
   mounted() {
     window.addEventListener('resize', () => {
       this.windowWidth = document.documentElement.clientWidth
-      console.log(this.isSmaller)
     })
   },
   computed: {
     isSmaller() {
-      console.log("here")
        return this.windowWidth < 960;
     },
-    // userNameErrors() {
-    //   const errors = []
-    //   if (!this.$v.userName.$dirty) return errors;
-    //   //!this.$v.userName.email && errors.push('Must be valid')
-    //   !this.$v.userName.required && errors.push('Required!')
-    //   return errors
-    // },
     userNumErrors() {
       const errors = []
       if (!this.$v.userNum.$dirty) return errors;
@@ -162,14 +153,22 @@ export default {
     },
 
   },
-  // created() {
-  //   this.userName =
-  // },
   methods: {
     checkError() {
       this.$v.$touch();
       if (this.$v.$invalid) {
         console.log('error')
+      }
+    },
+    emitEvent(){
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        this.somethingError = true;
+        console.log("sth wrong");
+      } else {
+        this.somethingError = false;
+        console.log("ready to go");
+        this.$emit("readyToGo");
       }
     }
   },

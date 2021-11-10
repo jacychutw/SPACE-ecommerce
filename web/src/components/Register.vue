@@ -10,7 +10,7 @@
           <v-text-field
             type="text"
             required
-            placeholder="display name"
+            placeholder="user name"
             id="name"
             solo
           ></v-text-field>
@@ -23,14 +23,28 @@
           >
           </v-text-field>
           <v-text-field
-            type="password"
+            :append-icon="value1 ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+            @click:append="() => (value1 = !value1)"
+            :type="value1 ? 'password' : 'text'"
             required
             placeholder="password"
             v-model="password"
             autocomplete="on"
             solo
           ></v-text-field>
-          <button class="register-btn" type="submit">Register</button>
+          <v-text-field
+            :append-icon="value2 ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
+            @click:append="() => (value2 = !value2)"
+            :type="value2 ? 'password' : 'text'"
+            required
+            placeholder="confirm password"
+            v-model="confirmPassword"
+            :rules="confirmPasswordRules.concat(passwordConfirmRule)"
+            autocomplete="on"
+            solo
+          >
+          </v-text-field>
+          <button class="register-btn" type="submit" :disabled="confirmError">Register</button>
         </form>
           <div v-if="error" class="inform-error mb-6">{{ error }}</div>
       </div>
@@ -50,6 +64,11 @@ export default {
       email: "",
       password: "",
       error: "",
+      confirmPassword: "",
+      confirmPasswordRules: [],
+      confirmError: false,
+      value1: String,
+      value2: String,
     };
   },
   methods: {
@@ -68,12 +87,28 @@ export default {
         console.log(res);
         this.$router.go();
       } catch (err) {
-        console.log(err);
         const errArr = err.message.split(' ');
         const cut = errArr.slice(1);
         this.error = cut.join(' ');
       }
     },
+  },
+  computed: {
+    passwordConfirmRule() {
+      return () =>
+        this.password === this.confirmPassword || "Not match with password.";
+    }
+  },
+  watch: {
+    confirmPassword: function(oldVal, newVal) {
+      if(this.password !== oldVal) {
+        this.confirmError = true;
+        console.log("unmatch", newVal);
+      } else {
+        this.confirmError = false;
+        console.log("match");
+      }
+    }
   },
 };
 </script>

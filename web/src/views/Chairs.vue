@@ -10,107 +10,22 @@
         <p>所有商品>椅子</p>
       </div>
       <v-row>
-        <v-col cols="12" sm="3">
-          <v-card class="pa-2" outlined tile>
-            <img
-              @click="checkchair01"
-              class="card-img product-img"
-              src="../assets/elements/chair01.jpg"
-              alt=""
-            />
-            <p class="card-title">木頭手把座椅-冬天小時光</p>
-            <p class="card-price">NT$ 3000/張</p>
-          </v-card>
-        </v-col>
-        <v-col cols="12" sm="3">
-          <v-card class="pa-2" outlined tile>
-            <img
-              @click="checkchair02"
-              class="card-img product-img"
-              src="../assets/elements/chair02.jpg"
-              alt=""
-            />
-            <p class="card-title">一體成型椅子-一抹抹茶香</p>
-            <p class="card-price">NT$ 2000/張</p>
-          </v-card>
-        </v-col>
-        <v-col cols="12" sm="3">
-          <v-card class="pa-2" outlined tile>
-            <img
-              @click="checkchair03"
-              class="card-img product-img"
-              src="../assets/elements/chair03.jpg"
-              alt=""
-            />
-            <p class="card-title">木條藤編椅子-經典交織曲線</p>
-            <p class="card-price">NT$ 3200/張</p>
-          </v-card>
-        </v-col>
-        <v-col cols="12" sm="3">
-          <v-card class="pa-2" outlined tile>
-            <img
-              @click="checkchair04"
-              class="card-img product-img"
-              src="../assets/elements/chair04.jpg"
-              alt=""
-            />
-            <p class="card-title">吊掛垂椅-陪你聽一首搖籃曲</p>
-            <p class="card-price">NT$ 4000/張</p>
-          </v-card>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12" sm="3">
-          <v-card class="pa-2" outlined tile>
-            <img
-              @click="checkchair05"
-              class="card-img product-img"
-              src="../assets/elements/chair05.jpg"
-              alt=""
-            />
-            <p class="card-title">包覆型躺椅-溫馨一隅</p>
-            <p class="card-price">NT$ 4000/張</p>
-          </v-card>
-        </v-col>
-        <v-col cols="12" sm="3">
-          <v-card class="pa-2" outlined tile>
-            <img
-              @click="checkchair06"
-              class="card-img product-img"
-              src="../assets/elements/chair06.jpg"
-              alt=""
-            />
-            <p class="card-title">沙發板凳組-慵懶時光</p>
-            <p class="card-price">NT$ 6000/組</p>
-          </v-card>
-        </v-col>
-        <v-col cols="12" sm="3">
-          <v-card class="pa-2" outlined tile>
-            <img
-              @click="checkchair07"
-              class="card-img product-img"
-              src="../assets/elements/chair07.jpg"
-              alt=""
-            />
-            <p class="card-title">工業造型椅-高效會議</p>
-            <p class="card-price">NT$ 2000/張</p>
-          </v-card>
-        </v-col>
-        <v-col cols="12" sm="3">
-          <v-card class="pa-2" outlined tile>
-            <img
-              @click="checkchair08"
-              class="card-img product-img"
-              src="../assets/elements/chair08.jpg"
-              alt=""
-            />
-            <p class="card-title">圓弧躺椅-享受芬多精</p>
-            <p class="card-price">NT$ 6000/張</p>
+        <v-col v-for="(item,i) in displayItems" :key="i" cols="6" sm="3">
+          <v-card class="pa-2 flashHover" outlined tile>
+            <figure>
+                <img
+                @click="checkItem(item.img)"
+                class="card-img product-img"
+                :src="`${publicPath}elements/${item.img}.jpg`"
+                alt="chair"
+              />
+            </figure>
+            <p class="card-title">{{ item.title }}</p>
+            <p class="card-price">{{ item.price }}</p>
           </v-card>
         </v-col>
       </v-row>
     </v-container>
-
     <div class="mt-8 mb-8">
       <img class="threedots-center" src="../assets/threedots.png" alt="threedots" />
     </div>
@@ -118,31 +33,29 @@
 </template>
 
 <script>
+import info from "../assets/info.json";
+
 export default {
+  data() {
+    return {
+      displayItems: [],
+      publicPath: process.env.BASE_URL,
+      infoData: info,
+    };
+  },
+  created() {
+    let allitems = ["chair01", "chair02", "chair03", "chair04", "chair05", "chair06", "chair07", "chair08", "chair09", "chair10", "chair11", "chair12"];
+    let newItems = [];
+    for (let i = 0; i < allitems.length; i++) {
+      let getInfo = this.infoData[allitems[i]];
+      newItems.push({"img": allitems[i], "title": getInfo["title"], "price": getInfo["price"], "description": getInfo["description"]});
+    }
+    this.displayItems = newItems;
+  },
   methods: {
-    checkchair01() {
-      this.$router.push({ name: "Chair", params: { itemid: "chair01" } });
-    },
-    checkchair02() {
-      this.$router.push({ name: "Chair", params: { itemid: "chair02" } });
-    },
-    checkchair03() {
-      this.$router.push({ name: "Chair", params: { itemid: "chair03" } });
-    },
-    checkchair04() {
-      this.$router.push({ name: "Chair", params: { itemid: "chair04" } });
-    },
-    checkchair05() {
-      this.$router.push({ name: "Chair", params: { itemid: "chair05" } });
-    },
-    checkchair06() {
-      this.$router.push({ name: "Chair", params: { itemid: "chair06" } });
-    },
-    checkchair07() {
-      this.$router.push({ name: "Chair", params: { itemid: "chair07" } });
-    },
-    checkchair08() {
-      this.$router.push({ name: "Chair", params: { itemid: "chair08" } });
+    checkItem(itemName) {
+      let reassemblyName = (itemName[0].toUpperCase() + itemName.slice(1)).split('', 5).join('');
+      this.$router.push({ name: reassemblyName, params: { itemid: itemName } });
     },
   },
 };
@@ -168,5 +81,27 @@ export default {
 
 .product-img {
   cursor: pointer;
+}
+
+.flashHover figure:hover img {
+  opacity: 1;
+  -webkit-animation: flash 2s;
+  animation: flash 2s;
+}
+@-webkit-keyframes flash {
+  0% {
+    opacity: .2;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes flash {
+  0% {
+    opacity: .2;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 </style>

@@ -7,7 +7,7 @@
     <div class="logistics-quote mt-4 mb-4">
       <p>
         SPACE 與 SUPER-FAST
-        物流合作，當確認收到您的貨款，會開始進行出貨作業。<br /><br />
+        物流合作，當我們確認收到您的匯款且有現貨，會開始跑完整的出貨流程。<br /><br />
         平均十個工作天內可以會送到您指定的地址。<br />
         若是離市區較遠的地區，平均需要十五個工作天。<br /><br />
         由於貨品體積較大，請收到貨品時確實檢查。若有毀損之處請立即反應，<br />
@@ -15,7 +15,7 @@
       </p>
     </div>
     <div class="ml-16 mr-16">
-      <img class="logistics-img" src="../assets/logistics.png" alt="" />
+      <img class="logistics-img" src="../assets/logistics.png" alt="logistics" />
     </div>
     <div class="mt-8 mb-8">
       <img class="threedots-center" src="../assets/threedots.png" alt="threedots" />

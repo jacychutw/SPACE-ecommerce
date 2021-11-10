@@ -1,57 +1,21 @@
 <template>
   <div>
-    <img class="home-img" src="../assets/home.png" alt="" />
-
+    <img class="home-img" src="../assets/home.png" alt="home" />
+      <p class="welcome-slogan">
+        Welcome! Take A Seat.
+      </p>
     <v-container class="white">
       <v-row>
-        <v-col cols="12" sm="3">
-          <div class="fixed-card" @click="checklight06">
+        <!-- 特製組合 -->
+        <v-col v-for="(item,i) in displayItems" :key="i" cols="6" sm="3">
+          <div class="fixed-card" @click="checkItem(item.img)">
             <v-card class="pa-2 home-link-img" outlined tile>
               <img
                 class="card-img"
-                src="../assets/elements/light06.jpg"
-                alt=""
+                :src="`${publicPath}elements/${item.img}.jpg`"
+                alt="random-item"
               />
-              <p class="card-title">白色立燈-永遠的焦點</p>
-            </v-card>
-            <div class="hide">Check Details</div>
-          </div>
-        </v-col>
-        <v-col cols="12" sm="3">
-          <div class="fixed-card" @click="checkchair05">
-            <v-card class="pa-2 home-link-img" outlined tile>
-              <img
-                class="card-img"
-                src="../assets/elements/chair05.jpg"
-                alt=""
-              />
-              <p class="card-title">包覆型躺椅-溫馨一隅</p>
-            </v-card>
-            <div class="hide">Check Details</div>
-          </div>
-        </v-col>
-        <v-col cols="12" sm="3">
-          <div class="fixed-card" @click="checklight01">
-            <v-card class="pa-2 home-link-img" outlined tile>
-              <img
-                class="card-img"
-                src="../assets/elements/light01.jpg"
-                alt=""
-              />
-              <p class="card-title">圓形燈串-美好的邂逅</p>
-            </v-card>
-            <div class="hide">Check Details</div>
-          </div>
-        </v-col>
-        <v-col cols="12" sm="3">
-          <div class="fixed-card" @click="checkchair08">
-            <v-card class="pa-2 home-link-img" outlined tile>
-              <img
-                class="card-img"
-                src="../assets/elements/chair08.jpg"
-                alt=""
-              />
-              <p class="card-title">圓弧躺椅-享受芬多精</p>
+              <p class="card-title">{{ item.title }}</p>
             </v-card>
             <div class="hide">Check Details</div>
           </div>
@@ -62,32 +26,52 @@
     <div class="quote">
       <img class="dots-img" src="../assets/threedots.png" alt="threedots" />
       <p>
-        一個空間，因著人們在其中來回走動、駐足停留，賦予其無限可能性。好的傢俱與擺飾給予空間不同的生命力，無論是時尚風格、鄉村恬靜、北歐高雅等各類型，精巧妙地搭配，都可以無違和感地融入。
+        空間因人們在其中走動、停留，賦予其無限可能性。好的燈具及椅子為空間注入生命力，無論是時尚風格、鄉村恬靜、北歐高雅等，精巧妙地搭配，都可完美融入。
       </p>
       <img class="dots-img" src="../assets/threedots.png" alt="threedots" />
     </div>
 
     <div class="mt-8 mb-8">
-      <img class="long-img" src="../assets/fivepics.png" alt="" />
+      <img class="long-img" src="../assets/fivepics.png" alt="fivepics" />
     </div>
   </div>
 </template>
 
 <script>
+import homeInfo from "../assets/home.json";
+
 export default {
   name: "Home",
+  data() {
+    return {
+      counter: 1,
+      id: this.$route.params.itemid,
+      alreadyLogin: false,
+      openCheckDialog: false,
+      checkIfChair: true,
+      decreaseActiveColor: "lightgray",
+      increaseActiveColor: "#526161",
+      displayItems: [],
+      publicPath: process.env.BASE_URL,
+      homeData: homeInfo,
+    };
+  },
+  created() {
+    let allitems = ["chair01", "chair02", "chair03", "chair04", "chair05", "chair06", "chair07", "chair08", "chair09", "chair10", "chair11", "chair12",
+                  "light01", "light02", "light03", "light04", "light05", "light06", "light07", "light08", "light09", "light10", "light11", "light12"];
+    let newItems = [];
+    for (let i = 0; i < 4; i++) {
+      let idx = Math.floor(Math.random() * allitems.length);
+      let titleID = allitems[idx];
+      newItems.push({"img": allitems[idx], "title": this.homeData[titleID]});
+      allitems.splice(idx, 1);
+    }
+    this.displayItems = newItems;
+  },
   methods: {
-    checklight06() {
-      this.$router.push({ name: "Light", params: { itemid: "light06" } });
-    },
-    checkchair05() {
-      this.$router.push({ name: "Chair", params: { itemid: "chair05" } });
-    },
-    checklight01() {
-      this.$router.push({ name: "Light", params: { itemid: "light01" } });
-    },
-    checkchair08() {
-      this.$router.push({ name: "Chair", params: { itemid: "chair08" } });
+    checkItem(itemName) {
+      let reassemblyName = (itemName[0].toUpperCase() + itemName.slice(1)).split('', 5).join('');
+      this.$router.push({ name: reassemblyName, params: { itemid: itemName } });
     },
   },
 };
@@ -146,18 +130,32 @@ export default {
 
 .quote p {
   width: 400px;
-  margin: 20px 80px;
+  margin: 20px 20px;
   font-size: 16px;
+  text-align: left;
 }
 
 .dots-img {
   width: 96px;
   height: 24px;
+  margin: 0 40px;
+}
+
+@media only screen and (max-width: 599px) {
+  .dots-img {
+    display: none;
+  }
 }
 
 .long-img {
   display: block;
   width: 80%;
   margin: auto;
+}
+
+.welcome-slogan {
+  text-align: center;
+  padding: 20px 0;
+  color: #526161;
 }
 </style>

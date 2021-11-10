@@ -70,20 +70,22 @@ export default {
     async readData() {
       let user = firebase.auth().currentUser;
       //let username = user.displayName;
-      this.useremail = user.email;
-      const dbGetUser = firebase
-        .firestore()
-        .collection("userdata")
-        .where("email", "==", this.useremail);
-      await dbGetUser.get().then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          let num = doc.data().price.replace(/^.*?(\d+).*/, "$1");
-          let eachsum = num * doc.data().count;
-          this.sumnumber += parseInt(eachsum);
-          const newData = { ...doc.data(), eachsum: "NT$ " + eachsum };
-          this.products.push(newData);
+      if(user) {
+        this.useremail = user.email;
+        const dbGetUser = firebase
+          .firestore()
+          .collection("userdata")
+          .where("email", "==", this.useremail);
+        await dbGetUser.get().then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            let num = doc.data().price.replace(/^.*?(\d+).*/, "$1");
+            let eachsum = num * doc.data().count;
+            this.sumnumber += parseInt(eachsum);
+            const newData = { ...doc.data(), eachsum: "NT$ " + eachsum };
+            this.products.push(newData);
+          });
         });
-      });
+      }
       this.checkEmpty();
     },
     checkEmpty() {

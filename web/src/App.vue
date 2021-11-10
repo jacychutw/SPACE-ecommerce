@@ -3,7 +3,7 @@
     <TopHeader />
 
     <div class="logo">
-      <img @click="toHome" class="logo-img" src="./assets/space.png" alt="" />
+      <img @click="toHome" class="logo-img" src="./assets/space.svg" alt="space" />
     </div>
 
     <div class="nav">
@@ -12,8 +12,6 @@
           <router-link to="/all-products">所有商品</router-link>
         </li>
         <li class="navbar-item">
-          <!--<router-link to="/featured-products">精選商品</router-link>-->
-
           <v-menu open-on-hover offset-y>
             <template v-slot:activator="{ on, attrs }">
               <v-btn
@@ -134,5 +132,11 @@ a {
 
 .v-application p {
   margin-bottom: 0px;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>

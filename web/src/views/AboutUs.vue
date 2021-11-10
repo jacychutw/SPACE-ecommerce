@@ -15,7 +15,7 @@
       </p>
     </div>
     <div class="ml-16 mr-16">
-      <img class="about-img" src="../assets/about.png" alt="" />
+      <img class="about-img" src="../assets/about.png" alt="about" />
     </div>
     <div class="mt-8 mb-8">
       <img class="threedots-center" src="../assets/threedots.png" alt="threedots" />
