@@ -19,12 +19,10 @@ export default {
   mounted() {
     window.addEventListener('resize', () => {
       this.windowWidth = document.documentElement.clientWidth
-      console.log(this.isSmaller)
     })
   },
   computed: {
     isSmaller() {
-      console.log("here")
        return this.windowWidth < 960;
     },
   },

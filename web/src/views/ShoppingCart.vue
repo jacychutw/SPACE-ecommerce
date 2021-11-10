@@ -38,11 +38,12 @@
       </v-stepper-content>
 
       <v-stepper-content step="2">
-        <UserInfo :sumnumber="sumnumber" :username="username" :useremail="useremail" />
+        <UserInfo ref="child" @readyToGo="toStep3" :sumnumber="sumnumber" :username="username" :useremail="useremail" />
 
         <div class="next-step">
           <button @click="e1 = 1" class="uncheckcart-button mb-8 mr-1">上一步</button>
-          <button @click="e1 = 3" class="checkcart-button mb-8 ml-1">下一步</button>
+          <!-- <button @click="e1 = 3" class="checkcart-button mb-8 ml-1">下一步</button> -->
+          <button @click="checkUserInfo" class="checkcart-button mb-8 ml-1">下一步</button>
         </div>
 
       </v-stepper-content>
@@ -79,7 +80,6 @@ export default {
        var toNext = document.querySelector("#first");
       if(val[0]) {
         // val true 的話 代表可以進到下一步
-        console.log("val",val)
         this.changeActiveColor = "#516161";
         toNext.removeAttribute("disabled", "");
         toNext.setAttribute("enabled", "");
@@ -87,11 +87,16 @@ export default {
         this.username = val[2];
         this.useremail = val[3];
       } else {
-        console.log("val",val)
         this.changeActiveColor = "lightgray";
         toNext.removeAttribute("enabled", "");
         toNext.setAttribute("disabled", "");
       }
+    },
+    checkUserInfo() {
+      this.$refs.child.emitEvent();
+    },
+    toStep3() {
+      setTimeout(() => {this.e1 = 3}, 5000);
     }
   }
 };
@@ -132,8 +137,7 @@ export default {
 }
 
 .uncheckcart-button {
-  background-color: gray;
-  color: white;
+  border: 1px solid gray;
   padding: 6px 20px;
   cursor: pointer;
 }

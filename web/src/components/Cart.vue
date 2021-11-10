@@ -180,7 +180,6 @@ export default {
   mounted() {
     window.addEventListener('resize', () => {
       this.windowWidth = document.documentElement.clientWidth
-      console.log(this.isSmaller)
     })
   },
   computed: {
@@ -342,7 +341,6 @@ export default {
   created() {
     this.readData();
     this.timestamp = Math.floor(Date.now()/ 1000);
-    console.log("timestamp",this.timestamp)
   },
 };
 </script>

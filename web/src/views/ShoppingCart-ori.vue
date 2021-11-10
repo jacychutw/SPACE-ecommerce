@@ -175,10 +175,8 @@ export default {
       await dbGetUser.get().then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           let num = doc.data().price.replace(/^.*?(\d+).*/, "$1");
-          //console.log(num);
           let eachsum = num * doc.data().count;
           this.sumnumber += parseInt(eachsum);
-          //console.log(eachsum);
           const newData = { ...doc.data(), eachsum: "NT$ " + eachsum };
           this.products.push(newData);
         });
@@ -199,7 +197,6 @@ export default {
       await dbGetUser.then((doc) => {
         doc.forEach((element) => {
           element.ref.delete();
-          console.log("deleted");
         });
         return (this.isDataLoaded = true);
       });

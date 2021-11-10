@@ -173,7 +173,6 @@ export default {
           //已經登入
           const displayName = user.displayName;
           const userEmail = user.email;
-          console.log(displayName);
           this.alreadyLogin = true;
           this.openCheckDialog = true;
           firebase
@@ -212,13 +211,11 @@ export default {
           //還沒登入
           this.alreadyLogin = false;
           this.openCheckDialog = true;
-          console.log("Please log in before adding to shopping cart!");
         }
       });
     },
     clearSelect() {
       setTimeout(() => {
-        console.log("here");
         this.counter = 1;
         this.decreaseActiveColor = "lightgray";
       }, 500);
@@ -230,7 +227,6 @@ export default {
           //已經登入
           const displayName = user.displayName;
           const userEmail = user.email;
-          console.log(displayName);
           this.alreadyLogin = true;
           //this.openCheckDialog = true;
           firebase
@@ -269,7 +265,6 @@ export default {
           //還沒登入
           this.alreadyLogin = false;
           this.openCheckDialog = true;
-          console.log("Please log in before adding to shopping cart!");
         }
       });
     },
