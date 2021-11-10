@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <NotFound />
     <TopHeader />
 
     <div class="logo">
@@ -56,13 +57,14 @@
 <script>
 import Footer from "./components/Footer.vue";
 import TopHeader from "./components/TopHeader.vue";
+import NotFound from "./views/404.vue";
 
 export default {
   name: "App",
 
   data: () => ({
   }),
-  components: { Footer, TopHeader },
+  components: { Footer, TopHeader, NotFound },
   methods: {
     toHome() {
       this.$router.push({ name: "Home" });

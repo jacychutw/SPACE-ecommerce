@@ -5,12 +5,12 @@
     </div>
     <v-data-table
       v-if="isDataLoaded"
-      class="mr-12 ml-12"
       :headers="shoppingHeaders"
       :items="products"
       hide-default-footer
       disable-pagination
       @input="(event) => inputAnnotation(event, props.item.img)"
+      style="border: 1px solid lightgray"
     >
       <template v-slot:item.img="{ item }">
         <img
@@ -40,14 +40,14 @@
       您的購物車是空的，去逛逛吧！
     </div>
 
-    <div class="mt-8 mb-2 mr-16" style="display: flex; justify-content: flex-end;">
+    <div class="mt-4 mb-2" style="display: flex; justify-content: center; color: #526161">
       <div>結帳金額：NT$ {{ sumnumber }}</div>
       <!-- <div class="float-right mt-8">
         <span class="checkcart-button">下一步</span>
       </div> -->
     </div>
 
-    <div v-if="checkBill()" class="mb-16 mr-16 ml-16" style="display: flex; justify-content: flex-end; color: rgb(177, 81, 81);">您的結帳金額超過 5 萬元(大量訂購)，欲購買請直接致電與我們聯繫！</div>
+    <div v-if="checkBill()" class="mb-2" style="display: flex; justify-content: center; color: rgb(177, 81, 81);">您的結帳金額超過 5 萬元(大量訂購)，欲購買請直接致電與我們聯繫！</div>
 
     <!-- <form action="https://ccore.newebpay.com/MPG/mpg_gateway" method="post"> -->
     <form @submit.prevent="submitForm">
