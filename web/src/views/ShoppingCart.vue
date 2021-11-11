@@ -2,8 +2,8 @@
   <div class="stepper">
     <v-divider></v-divider>
 
-  <div class="mr-16 ml-16 mt-4">
-  <v-stepper alt-labels v-model="e1" flat>
+  <div class="mr-2 ml-2 mt-4">
+  <v-stepper alt-labels v-model="e1" flat class="expand">
     <v-stepper-header>
       <v-stepper-step
         :complete="e1 > 1"
@@ -142,4 +142,15 @@ export default {
   cursor: pointer;
 }
 
+@media only screen and (min-width: 800px) {
+  .expand {
+    margin: 0 60px;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .expand {
+    margin: 0 90px;
+  }
+}
 </style>
