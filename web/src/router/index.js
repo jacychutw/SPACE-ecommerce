@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+
+import MainLayout from "../layout/MainLayout.vue";
 import Home from "../views/Home.vue";
 import AllProducts from "../views/AllProducts.vue";
 import Chairs from "../views/Chairs.vue";
@@ -7,11 +9,10 @@ import Lights from "../views/Lights.vue";
 import AboutUs from "../views/AboutUs.vue";
 import Payment from "../views/Payment.vue";
 import Logistics from "../views/Logistics.vue";
-// import ProductChair from "../components/ProductChair.vue";
-// import ProductLight from "../components/ProductLight.vue";
 import ProductPage from "../components/ProductPage.vue";
 import Welcome from "../views/Welcome.vue";
 import ShoppingCart from "../views/ShoppingCart.vue";
+import NotFound from "../views/404.vue";
 
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -26,59 +27,70 @@ VueRouter.prototype.push = function push(location) {
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    component: MainLayout,
+    children: [
+      {
+        path: "/",
+        name: "Home",
+        component: Home,
+      },
+      {
+        path: "/welcome",
+        name: "Welcome",
+        component: Welcome,
+      },
+      {
+        path: "/shoppingcart",
+        name: "ShoppingCart",
+        component: ShoppingCart,
+        meta: { reauiresAuth: true },
+      },
+      {
+        path: "/all-products",
+        name: "AllProducts",
+        component: AllProducts,
+      },
+      {
+        path: "/chairs",
+        name: "Chairs",
+        component: Chairs,
+      },
+      {
+        path: "/chairs/:itemid",
+        name: "Chair",
+        component: ProductPage,
+      },
+      {
+        path: "/lights",
+        name: "Lights",
+        component: Lights,
+      },
+      {
+        path: "/lights/:itemid",
+        name: "Light",
+        component: ProductPage,
+      },
+      {
+        path: "/about",
+        name: "AboutUs",
+        component: AboutUs,
+      },
+      {
+        path: "/payment",
+        name: "Payment",
+        component: Payment,
+      },
+      {
+        path: "/logistics",
+        name: "Logistics",
+        component: Logistics,
+      },
+    ],
   },
   {
-    path: "/welcome",
-    name: "Welcome",
-    component: Welcome,
-  },
-  {
-    path: "/shoppingcart",
-    name: "ShoppingCart",
-    component: ShoppingCart,
-    meta: { reauiresAuth: true },
-  },
-  {
-    path: "/all-products",
-    name: "AllProducts",
-    component: AllProducts,
-  },
-  {
-    path: "/chairs",
-    name: "Chairs",
-    component: Chairs,
-  },
-  {
-    path: "/chairs/:itemid",
-    name: "Chair",
-    component: ProductPage,
-  },
-  {
-    path: "/lights",
-    name: "Lights",
-    component: Lights,
-  },
-  {
-    path: "/lights/:itemid",
-    name: "Light",
-    component: ProductPage,
-  },
-  {
-    path: "/about",
-    name: "AboutUs",
-    component: AboutUs,
-  },
-  {
-    path: "/payment",
-    name: "Payment",
-    component: Payment,
-  },
-  {
-    path: "/logistics",
-    name: "Logistics",
-    component: Logistics,
+    path: "/404",
+    name: "NotFound",
+    component: NotFound,
   },
 ];
 
@@ -95,11 +107,12 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.reauiresAuth);
   const isAuthenticated = firebase.auth().currentUser;
-  if (requiresAuth && !isAuthenticated) {
+  if (!to.matched.length) {
+    next("./404");
+  } else if (requiresAuth && !isAuthenticated) {
     next("/welcome");
   } else {
     next();
   }
 });
-
 export default router;
