@@ -10,16 +10,14 @@
           <v-text-field
             type="text"
             required
-            placeholder="user name"
+            label="* user name"
             id="name"
-            solo
           ></v-text-field>
           <v-text-field
             type="email"
             required
-            placeholder="email"
+            label="* email"
             v-model="email"
-            solo
           >
           </v-text-field>
           <v-text-field
@@ -27,24 +25,22 @@
             @click:append="() => (value1 = !value1)"
             :type="value1 ? 'password' : 'text'"
             required
-            placeholder="password"
+            label="* password"
             v-model="password"
             autocomplete="on"
-            solo
           ></v-text-field>
           <v-text-field
             :append-icon="value2 ? 'mdi-eye-outline' : 'mdi-eye-off-outline'"
             @click:append="() => (value2 = !value2)"
             :type="value2 ? 'password' : 'text'"
             required
-            placeholder="confirm password"
+            label="* confirm password"
             v-model="confirmPassword"
             :rules="confirmPasswordRules.concat(passwordConfirmRule)"
             autocomplete="on"
-            solo
           >
           </v-text-field>
-          <button class="register-btn" type="submit" :disabled="confirmError">Register</button>
+          <button class="register-btn mt-4" type="submit" :disabled="confirmError">Register</button>
         </form>
           <div v-if="error" class="inform-error mb-6">{{ error }}</div>
       </div>

@@ -65,7 +65,7 @@ import UserInfo from "../components/UserInfo.vue";
 import Received from "../components/Received.vue";
 
 export default {
-  components: { Cart, UserInfo, Received },
+  components: { Cart, UserInfo, Received},
   data () {
     return {
       e1: 1,
@@ -96,7 +96,10 @@ export default {
       this.$refs.child.emitEvent();
     },
     toStep3() {
-      setTimeout(() => {this.e1 = 3}, 5000);
+      setTimeout(() => {
+        this.$router.push({name: 'Received'})
+        this.e1 = 3
+      }, 500);
     }
   }
 };

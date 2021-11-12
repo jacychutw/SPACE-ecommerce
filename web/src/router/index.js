@@ -46,6 +46,12 @@ const routes = [
         meta: { reauiresAuth: true },
       },
       {
+        path: "/shoppingcart/received",
+        name: "Received",
+        component: ShoppingCart,
+        meta: { reauiresAuth: true },
+      },
+      {
         path: "/all-products",
         name: "AllProducts",
         component: AllProducts,

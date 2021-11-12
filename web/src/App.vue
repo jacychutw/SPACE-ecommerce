@@ -1,12 +1,31 @@
 <template>
   <v-app>
+    <div v-if="$store.state.spinner.addSpinner">
+      <Spinner />
+    </div>
     <router-view />
   </v-app>
 </template>
 
 <script>
+import Spinner from "@/components/Spinner.vue"
+
 export default {
   name: "App",
+  components: { Spinner },
+  data() {
+    return {
+      spin: {
+        val: false,
+      },
+      // addSpinner: "",
+    }
+  },
+  // provide() {
+  //   return {
+  //     addSpinner: this.spin.val
+  //   }
+  // }
 };
 </script>
 

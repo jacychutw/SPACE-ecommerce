@@ -83,7 +83,7 @@
             padding: 24px 20px 20px 20px;
             background-color: rgb(227, 230, 230);
           "
-          @click="openCheckDialog = false; reRenderCheckCart()"
+          @click="openCheckDialog = false"
         >
           確定
         </v-btn>
@@ -273,11 +273,11 @@ export default {
         this.$router.push({ name: "ShoppingCart" });
       }, 300);
     },
-    reRenderCheckCart() {
-      setTimeout(() => {
-        this.$router.go();
-      }, 300);
-    },
+    // reRenderCheckCart() {
+    //   setTimeout(() => {
+    //     this.$router.go();
+    //   }, 300);
+    // },
     numberMoreThanNine() {
       if (this.counter > 8) {
         return true;

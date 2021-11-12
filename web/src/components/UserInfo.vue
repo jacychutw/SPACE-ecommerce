@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="isSmaller" class="page-title mt-0 mb-8">
-      <h2>填寫資料</h2>
+      <h2>填寫資料{{ $store.state.spinner.addSpinner }}</h2>
     </div>
     <div class="all-forms">
       <div>
@@ -92,6 +92,8 @@
 import { validationMixin } from "vuelidate";
 import { required } from "vuelidate/lib/validators";
 import { helpers } from 'vuelidate/lib/validators';
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
 
 const alpha = helpers.regex('alpha', /^09[0-9]{8}$/);
 
@@ -106,6 +108,7 @@ export default {
       recipientNum: "",
       shippingAddress: "",
       somethingError: true,
+      isDataLoaded: false,
     };
   },
   props:["sumnumber", "username" , "useremail"],
@@ -162,16 +165,41 @@ export default {
     },
     emitEvent(){
       this.$v.$touch();
+      // 有錯誤所以不能結帳
       if (this.$v.$invalid) {
         this.somethingError = true;
         console.log("sth wrong");
       } else {
+      // 沒錯誤 結帳時要把資料庫資料刪除 spinner設定在這邊
+        this.$store.state.spinner.addSpinner = true;
         this.somethingError = false;
-        console.log("ready to go");
-        this.$emit("readyToGo");
+        this.deleteCertinCart();
       }
-    }
+    },
+    async deleteCertinCart() {
+      this.isDataLoaded = false;
+      let user = firebase.auth().currentUser;
+      const dbGetUser = firebase
+        .firestore()
+        .collection("userdata")
+        .where("email", "==", user.email)
+        .get();
+      await dbGetUser.then((doc) => {
+        doc.forEach((element) => {
+          element.ref.delete();
+        });
+        return (this.isDataLoaded = true);
+      });
+      if (this.isDataLoaded) {
+        //spinner 取消
+        setTimeout(() => {
+          this.$store.state.spinner.addSpinner = false;
+          this.$emit("readyToGo");
+        }, 4000);
+      }
+    },
   },
+  // inject: ["addSpinner"]
 }
 </script>
 

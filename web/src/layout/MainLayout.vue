@@ -57,7 +57,6 @@
 <script>
 import Footer from "../components/Footer.vue";
 import TopHeader from "../components/TopHeader.vue";
-//import NotFound from "./views/404.vue";
 
 export default {
   name: "App",
@@ -104,9 +103,4 @@ export default {
   padding-left: 16px;
   padding-right: 16px;
 }
-
-/* .v-btn__content {
-  margin-bottom: 3px !important;
-  margin-top: 3px !important;
-} */
 </style>
