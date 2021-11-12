@@ -10,9 +10,9 @@
           <v-text-field
             type="email"
             required
+            label="* email"
             placeholder="email"
             v-model="email"
-            solo
           >
           </v-text-field>
           <v-text-field
@@ -20,12 +20,12 @@
             @click:append="() => (value1 = !value1)"
             :type="value1 ? 'password' : 'text'"
             required
+            label="* password"
             placeholder="password"
             v-model="password"
             autocomplete="on"
-            solo
           ></v-text-field>
-          <button class="login-btn" type="submit">Login</button>
+          <button class="login-btn mt-4" type="submit">Login</button>
         </form>
           <div v-if="error" class="inform-error mb-6">{{ error }}</div>
       </div>

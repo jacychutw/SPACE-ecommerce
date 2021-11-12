@@ -36,8 +36,8 @@
       </template>
     </v-data-table>
 
-    <div v-if="checkEmptyCart()" class="ml-16" style="color: #526161">
-      您的購物車是空的，去逛逛吧！
+    <div v-if="checkEmptyCart()" class="mt-8" style="display: flex; justify-content: center; color: #915233">
+      購物車目前是空的，去逛逛吧！
     </div>
 
     <div class="mt-4 mb-2" style="display: flex; justify-content: center; color: #526161">
@@ -245,12 +245,12 @@ export default {
     async deleteFromCart() {
       this.isDataLoaded = false;
       let user = firebase.auth().currentUser;
-      this.username = user.displayName;
+      //this.username = user.displayName;
       let deleteId = this.deleteId;
       const dbGetUser = firebase
         .firestore()
         .collection("userdata")
-        .where("user", "==", this.username)
+        .where("email", "==", user.email)
         .where("img", "==", deleteId)
         .get();
       await dbGetUser.then((doc) => {
