@@ -16,7 +16,7 @@
                 <img
                 @click="checkItem(item.img)"
                 class="card-img product-img"
-                :src="`${publicPath}elements/${item.img}.jpg`"
+                :src="`${publicPath}img/elements/${item.img}.jpg`"
                 alt="chair"
               />
             </figure>

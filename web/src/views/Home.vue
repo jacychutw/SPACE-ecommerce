@@ -12,7 +12,7 @@
             <v-card class="pa-2 home-link-img" outlined tile>
               <img
                 class="card-img"
-                :src="`${publicPath}elements/${item.img}.jpg`"
+                :src="`${publicPath}img/elements/${item.img}.jpg`"
                 alt="random-item"
               />
               <p class="card-title">{{ item.title }}</p>

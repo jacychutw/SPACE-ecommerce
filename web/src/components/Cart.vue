@@ -16,7 +16,7 @@
         <img
           class="pt-1"
           width="45"
-          :src="`${publicPath}elements/${item.img}.jpg`"
+          :src="`${publicPath}img/elements/${item.img}.jpg`"
         />
       </template>
       <template v-slot:item.eachsum="{ item }">
